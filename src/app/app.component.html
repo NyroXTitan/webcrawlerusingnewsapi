@@ -1,0 +1,17 @@
+<div>
+  <h1>BBC News Headlines</h1>
+  <button (click)="fetchNews()"> Fetch Data</button>
+  <div *ngIf="loading">Loading...</div>
+  <div *ngIf="error">{{ error }}</div>
+  <div *ngIf="news.length > 0">
+    <ul>
+      <li *ngFor="let article of news">
+        <h2>{{ article.title }}</h2>
+        <p>{{ article.description }}</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<p>{{nodata}}</p>
+
