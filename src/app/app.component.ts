@@ -4,7 +4,7 @@ import { NgIf, NgForOf } from '@angular/common';
 import { Observable } from 'rxjs';
 
 interface NewsResponse {
-  articles: { title: string; description: string; url: string; }[]; // Use T[] instead of Array<T>
+  articles: { title: string; description: string; }[]; // Use T[] instead of Array<T>
 }
 
 @Component({
@@ -16,7 +16,7 @@ interface NewsResponse {
 })
 export class AppComponent {
   nodata = 'No articles found. Click "Fetch News" to load articles.'; // Removed explicit string type annotation
-  news: { title: string; description: string; url: string; }[] = []; // Use T[] instead of Array<T>
+  news: { title: string; description: string; }[] = []; // Use T[] instead of Array<T>
   loading = false;
   error: string | null = null;
 
