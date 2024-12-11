@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { NgIf, NgForOf } from '@angular/common';
 import { Observable } from 'rxjs';
 
+interface Article {
+  title: string;
+  description: string;
+  url: string;
+}
+
 interface NewsResponse {
-  articles: { title: string; description: string; url: string; }[]; // Use T[] instead of Array<T>
+  articles: Article[];
 }
 
 @Component({
@@ -15,14 +21,14 @@ interface NewsResponse {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  nodata = 'No articles found. Click "Fetch News" to load articles.'; // Removed explicit string type annotation
-  news: { title: string; description: string; url: string; }[] = []; // Use T[] instead of Array<T>
+  nodata = 'No articles found. Click "Fetch News" to load articles.'; // Removed explicit type annotation
+  news: Article[] = []; // Replaced Array<T> with T[]
   loading = false;
   error: string | null = null;
 
   constructor(private http: HttpClient) {}
 
-  fetchNews() {
+  fetchNews(): void {
     this.nodata = '';
     this.loading = true;
     this.error = null;
@@ -31,19 +37,22 @@ export class AppComponent {
       next: (response: NewsResponse) => {
         if (response.articles.length === 0) {
           this.nodata = 'No articles found.';
+        } else {
+          this.news = response.articles;
         }
-        this.news = response.articles;
         this.loading = false;
       },
-      error: () => {
-        this.error = 'Failed to load news. Please try again.';
+      error: (err: HttpErrorResponse) => {
+        this.error = `Failed to load news: ${err.message}`;
         this.loading = false;
       },
     });
   }
 
-private getNews(): Observable<NewsResponse> {
+  private getNews(): Observable<NewsResponse> {
     const apiUrl = 'https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=12facf31f0df455784226e90487fab92';
     return this.http.get<NewsResponse>(apiUrl);
   }
 }
+
+
