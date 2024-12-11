@@ -4,7 +4,7 @@ import { NgIf, NgForOf } from '@angular/common';
 import { Observable } from 'rxjs';
 
 interface NewsResponse {
-  articles: Array<{ title: string; description: string; url: string; }>; // Define a strict structure for articles
+  articles: { title: string; description: string; url: string; }[]; // Use T[] instead of Array<T>
 }
 
 @Component({
@@ -15,8 +15,8 @@ interface NewsResponse {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  nodata: string = 'No articles found. Click "Fetch News" to load articles.';
-  news: Array<{ title: string; description: string; url: string; }> = [];
+  nodata = 'No articles found. Click "Fetch News" to load articles.'; // Removed explicit string type annotation
+  news: { title: string; description: string; url: string; }[] = []; // Use T[] instead of Array<T>
   loading = false;
   error: string | null = null;
 
@@ -42,7 +42,7 @@ export class AppComponent {
     });
   }
 
-  private getNews(): Observable<NewsResponse> {
+private getNews(): Observable<NewsResponse> {
     const apiUrl = 'https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=12facf31f0df455784226e90487fab92';
     return this.http.get<NewsResponse>(apiUrl);
   }
